@@ -1,0 +1,20 @@
+<table class="generaltable">
+  <thead>
+    <tr>
+{{#headings}}
+      <th class="header" style="text-align:left;" scope="col">{{title1}}</th>
+      <th class="header" style="text-align:left;" scope="col">{{title2}}</th>
+      <th class="header" style="text-align:left;" scope="col">{{title3}}</th>
+{{/headings}}
+    </tr>
+  </thead>
+  <tbody>
+{{#rows}}
+    <tr>
+      <td class="cell" style="text-align:left;" scope="col">{{name}}</td>
+      <td class="cell" style="text-align:left;" scope="col">{{username}}</td>
+      <td class="cell" style="text-align:left;" scope="col">{{email}}</td>
+    </tr>
+{{/rows}}
+  </tbody>
+</table>
