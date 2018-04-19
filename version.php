@@ -22,7 +22,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version    = 2018020900;       // The current plugin version (Date: YYYYMMDDXX)
+$plugin->version    = 2018042000;       // The current plugin version (Date: YYYYMMDDXX)
 $plugin->requires   = 2017051500;       // 3.3 - https://docs.moodle.org/dev/Releases
 $plugin->component  = 'report_categorymanager';  // Full name of the plugin (used for diagnostics)
-$plugin->release    = '1.0';
+$plugin->release    = '1.1';

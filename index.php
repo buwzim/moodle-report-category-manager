@@ -52,8 +52,39 @@
                      1 => get_string('col_username', 'report_categorymanager'),
                      2 => get_string('col_email', 'report_categorymanager'));
 
+
 // DB Query
-   $content = $DB->get_records_sql("SELECT DISTINCT concat(u.firstname, ' ', u.lastname) as name, u.username, u.email FROM {role} r, {role_assignments} ra, {context} cx, {user} u, {course_categories} cc WHERE (cc.id = ?) AND (cx.instanceid = cc.id) AND (cx.contextlevel = 40) AND (ra.contextid = cx.id) AND (r.shortname = 'categorymanager') AND (ra.roleid = r.id) AND (ra.userid = u.id)", array($PAGE->category->id));
+    $categoryPath = $DB->get_records_sql("SELECT path FROM {course_categories} WHERE id=?", array($PAGE->category->id));
+
+    foreach ($categoryPath as $pathObject) {
+        $parents = explode("/", $pathObject->path);
+    }
+
+
+    $content = array();
+
+    for($i=1; $i<count($parents); $i++) {
+        $contentDB[$i] = $DB->get_records_sql("SELECT DISTINCT concat(u.firstname, ' ', u.lastname) as name, u.username, u.email FROM {role} r, {role_assignments} ra, {context} cx, {user} u, {course_categories} cc WHERE (cc.id = ?) AND (cx.instanceid = cc.id) AND (cx.contextlevel = 40) AND (ra.contextid = cx.id) AND (r.shortname = 'categorymanager') AND (ra.roleid = r.id) AND (ra.userid = u.id)", array($parents[$i]));
+
+
+        /*
+            To avoid duplicate entries the numeric key (0,1,2,3) has to be switched with the username. The array_merge overwrites existing entries.
+        */
+        foreach ($contentDB[$i] as $key => $value) {
+
+            $contentDB2[$i][$value->username] = $contentDB[$i][$key];
+            unset($contentDB[$i][$key]);
+
+            $contentDB[$i][$value->username] = $contentDB2[$i][$value->username];
+            unset($contentDB2);
+        }
+
+
+        $content = array_merge($content, $contentDB[$i]);
+    }
+
+    //var_dump($content);
+
 
 
       //If no users were found
