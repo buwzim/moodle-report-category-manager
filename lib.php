@@ -29,3 +29,7 @@ function report_categorymanager_extend_navigation_category_settings($parentnode,
 
     }
 }
+
+function cmp($a, $b) {
+    return strcmp($a->lastname, $b->lastname);
+}

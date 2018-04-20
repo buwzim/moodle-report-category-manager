@@ -64,7 +64,7 @@
     $content = array();
 
     for($i=1; $i<count($parents); $i++) {
-        $contentDB[$i] = $DB->get_records_sql("SELECT DISTINCT concat(u.firstname, ' ', u.lastname) as name, u.username, u.email FROM {role} r, {role_assignments} ra, {context} cx, {user} u, {course_categories} cc WHERE (cc.id = ?) AND (cx.instanceid = cc.id) AND (cx.contextlevel = 40) AND (ra.contextid = cx.id) AND (r.shortname = 'categorymanager') AND (ra.roleid = r.id) AND (ra.userid = u.id)", array($parents[$i]));
+        $contentDB[$i] = $DB->get_records_sql("SELECT DISTINCT concat(u.firstname, ' ', u.lastname) as name, u.lastname, u.username, u.email FROM {role} r, {role_assignments} ra, {context} cx, {user} u, {course_categories} cc WHERE (cc.id = ?) AND (cx.instanceid = cc.id) AND (cx.contextlevel = 40) AND (ra.contextid = cx.id) AND (r.shortname = 'categorymanager') AND (ra.roleid = r.id) AND (ra.userid = u.id)", array($parents[$i]));
 
 
         /*
@@ -83,8 +83,17 @@
         $content = array_merge($content, $contentDB[$i]);
     }
 
-    //var_dump($content);
+/*
+    foreach ($content as $key => $row) {
+        $realname[$key] = $row['name'];
+    }
+*/
 
+    //array_multisort($jahrgang, SORT_DESC, $nachname, SORT_ASC, SORT_STRING, $data);
+    usort($content, "cmp");
+
+    //Sort array by name
+    //array_multisort($realname, SORT_ASC, $content);
 
 
       //If no users were found
