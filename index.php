@@ -67,9 +67,7 @@
         $contentDB[$i] = $DB->get_records_sql("SELECT DISTINCT concat(u.firstname, ' ', u.lastname) as name, u.lastname, u.username, u.email FROM {role} r, {role_assignments} ra, {context} cx, {user} u, {course_categories} cc WHERE (cc.id = ?) AND (cx.instanceid = cc.id) AND (cx.contextlevel = 40) AND (ra.contextid = cx.id) AND (r.shortname = 'categorymanager') AND (ra.roleid = r.id) AND (ra.userid = u.id)", array($parents[$i]));
 
 
-        /*
-            To avoid duplicate entries the numeric key (0,1,2,3) has to be switched with the username. The array_merge overwrites existing entries.
-        */
+        // To avoid duplicate entries the numeric key (0,1,2,3) has to be switched with the username.
         foreach ($contentDB[$i] as $key => $value) {
 
             $contentDB2[$i][$value->username] = $contentDB[$i][$key];
@@ -79,24 +77,15 @@
             unset($contentDB2);
         }
 
-
+        // Overwrite existing entries.
         $content = array_merge($content, $contentDB[$i]);
     }
 
-/*
-    foreach ($content as $key => $row) {
-        $realname[$key] = $row['name'];
-    }
-*/
-
-    //array_multisort($jahrgang, SORT_DESC, $nachname, SORT_ASC, SORT_STRING, $data);
+    // Sort array by name; defined in lib.php
     usort($content, "cmp");
 
-    //Sort array by name
-    //array_multisort($realname, SORT_ASC, $content);
 
-
-      //If no users were found
+      // If no users were found
       if(count($content) == 0) {
          $content = array();
             $content[0] = new stdClass();
@@ -105,7 +94,7 @@
             $content[0]->email = "";
       } else {
 
-         //If user has no right to see the realname
+         // If user has no right to see the realname
          if (!has_capability('report/categorymanager:viewName', context_coursecat::instance($categoryid))) {
 
             foreach ($content as $key) {
@@ -113,7 +102,7 @@
             }
          }
 
-         //If user has no right to see the username
+         // If user has no right to see the username
          if (!has_capability('report/categorymanager:viewAccount', context_coursecat::instance($categoryid))) {
 
             foreach ($content as $key) {
@@ -121,7 +110,7 @@
             }
          }
 
-         //If user has no right to see the e-mail address
+         // If user has no right to see the e-mail address
          if (!has_capability('report/categorymanager:viewEmail', context_coursecat::instance($categoryid))) {
 
             foreach ($content as $key) {
